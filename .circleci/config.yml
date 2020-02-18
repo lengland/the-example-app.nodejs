@@ -1,25 +1,29 @@
 version: 2
+orbs:
+  node: circleci/node@1.1.6
 jobs:
   build:
     docker:
-      - image: cypress/base:8
+      - image: alpine
     steps:
       - checkout
       - restore_cache: # special step to restore the dependency cache 
           key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: install-npm-wee
-          command: npm install
+      - node/install
+          install-npm: true
+      - node/with-cache:
+          steps:
+            - run: npm install
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      - run:
-          name: clone-e2e-test
-          command: git clone https://github.com/contentful/the-example-app-e2e-tests.git ./test/e2e
-      - run:
-          name: install-e2e-test
-          command: cd ./test/e2e && npm install
+#       - run:
+#           name: clone-e2e-test
+#           command: git clone https://github.com/contentful/the-example-app-e2e-tests.git ./test/e2e
+#       - run:
+#           name: install-e2e-test
+#           command: cd ./test/e2e && npm install
       - run:
           name: test
           command: npm run test
