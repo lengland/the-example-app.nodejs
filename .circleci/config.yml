@@ -9,7 +9,7 @@ jobs:
       - checkout
       - restore_cache: # special step to restore the dependency cache 
           key: dependency-cache-{{ checksum "package.json" }}
-      - node/install
+      - node/install:
           install-npm: true
       - node/with-cache:
           steps:
