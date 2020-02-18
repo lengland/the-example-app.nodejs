@@ -9,8 +9,9 @@ jobs:
       - checkout
       - restore_cache: # special step to restore the dependency cache 
           key: dependency-cache-{{ checksum "package.json" }}
-      - node/install-node
-      - node/install-npm
+      - node/install:
+          install-yarn: false
+          node-alpine-version: 12.15.0-r1
       - node/with-cache:
           steps:
             - run: npm install
